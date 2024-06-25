@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Export;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ExportController extends Controller
 {
@@ -12,47 +13,7 @@ class ExportController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Export $export)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Export $export)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Export $export)
-    {
-        //
+        $exports = Export::paginate(15);
     }
 
     /**
@@ -60,6 +21,10 @@ class ExportController extends Controller
      */
     public function destroy(Export $export)
     {
-        //
+        Storage::delete($export->file_name);
+
+        $export->delete();
+
+        return '[INFO] All the informations are destroyed!';
     }
 }
