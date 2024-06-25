@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Export extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'file_name',
+        'user_id'
+    ];
 }

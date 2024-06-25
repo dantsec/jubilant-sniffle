@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('exports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->string('file_url');
+            $table->foreignId('user_id')->constrained('users');
+            $table->string('file_name');
             $table->timestamps();
         });
     }
