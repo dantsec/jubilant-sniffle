@@ -8,13 +8,25 @@ use App\Jobs\SendExportEmailJob;
 use App\Jobs\StoreExportDataJob;
 use App\Services\PunkapiService;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use App\Models\Meal;
 
 class BeerController extends Controller
 {
-    // Aqui o laravel tenta fazer o match de PunkapiService automaticamente.
+    /**
+     * Aqui o laravel tenta fazer o match de PunkapiService automaticamente.
+     * Nao precisamo fazer: `$service = new PunkapiService();`
+     */
     public function index(BeerRequest $request, PunkapiService $service) {
-        // $service = new PunkapiService();
-        return $service->getBeers(...$request->validated());
+        $filters = $request->validated();
+        $beers = $service->getBeers(...$filters);
+        $meals = Meal::all();
+    
+        return Inertia::render('Beers', [
+            'beers' => $beers,
+            'meals' => $meals,
+            'filters' => $filters
+        ]);
     }
 
     public function export(BeerRequest $request, PunkapiService $service) {
@@ -25,6 +37,7 @@ class BeerController extends Controller
             new StoreExportDataJob(Auth::id(), $filename)
         ])->dispatch($request->validated(), $filename);
 
-        return '[INFO] Report Created Succesfully!';
+        return redirect()->back()
+            ->with('success', 'Seu arquivo esta em processamento e em breve chegara por email!');
     }
 }
