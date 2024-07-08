@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+:<<'SCML'
+
+@ --rm: remove
+@ -it: interactive
+@ -u: perms (default: root)
+@ --env-file: environment bariables
+@ -v: map folder container
+@ -w: working directory
+
+! chmod +x sail
+SCML
+
+docker run --rm -it \
+    -u $(id -u):$(id -g) \
+    --env-file ./.env \
+    -v $PWD:/workspace \
+    -w /workspace \
+    hashicorp/terraform:light "$@"
